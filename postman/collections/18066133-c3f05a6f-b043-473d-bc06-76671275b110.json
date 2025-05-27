@@ -1,0 +1,497 @@
+{
+	"info": {
+		"_postman_id": "18066133-c3f05a6f-b043-473d-bc06-76671275b110",
+		"name": "Product Rating & Review API",
+		"description": "The **Product Rating & Review Service** provides APIs that allow users to submit, view, update, and delete product reviews and ratings. This service is essential for enabling user-generated feedback in e-commerce platforms or any application where customer input is valuable.\n\n---\n\n### Key Features\n\n- ⭐ **Submit Ratings & Reviews**\n    \n    Users can post a rating (1–5 stars) and a written review for any product.\n    \n- 📄 **View Reviews**\n    \n    Retrieve all reviews for a specific product or a single review by ID.\n    \n- ✏️ **Edit Reviews**\n    \n    Users can update their own reviews if necessary.\n    \n- ❌ **Delete Reviews**\n    \n    Support for removing reviews when needed (e.g., spam or user request).",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get Product Reviews",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "929f7d7b-28be-4a13-83b4-389dd862c97e",
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Content-Type header is application/json\", function () {",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response has the required fields\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData).to.be.an('object');",
+							"    pm.expect(responseData.reviewId).to.exist;",
+							"    pm.expect(responseData.productId).to.exist;",
+							"    pm.expect(responseData.userId).to.exist;",
+							"    pm.expect(responseData.rating).to.exist;",
+							"    pm.expect(responseData.comment).to.exist;",
+							"    pm.expect(responseData.createdAt).to.exist;",
+							"});",
+							"",
+							"",
+							"pm.test(\"Rating should be a non-negative integer\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData.rating).to.be.a('number');",
+							"    pm.expect(responseData.rating).to.be.at.least(0, \"Rating should be a non-negative integer\");",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"id": "18066133-b488fb77-a205-4058-a282-6c05e0b6b7da",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/products/:productId/reviews",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"products",
+						":productId",
+						"reviews"
+					],
+					"variable": [
+						{
+							"key": "productId",
+							"value": ""
+						}
+					]
+				},
+				"description": "The endpoint retrieves the reviews for a specific product identified by the productId parameter.\n\n### Response\n\nThe response will be in JSON format with the following schema:\n\n``` json\n{\n    \"type\": \"object\",\n    \"properties\": {\n        \"reviewId\": {\n            \"type\": \"string\"\n        },\n        \"productId\": {\n            \"type\": \"string\"\n        },\n        \"userId\": {\n            \"type\": \"string\"\n        },\n        \"rating\": {\n            \"type\": \"number\"\n        },\n        \"comment\": {\n            \"type\": \"string\"\n        },\n        \"createdAt\": {\n            \"type\": \"string\"\n        }\n    }\n}\n\n ```"
+			},
+			"response": [
+				{
+					"id": "18066133-f1902666-665e-48bd-b94b-cc4b39ba5759",
+					"name": "Get Product Reviews",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/products/:productId/reviews",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"products",
+								":productId",
+								"reviews"
+							],
+							"variable": [
+								{
+									"key": "productId",
+									"value": ""
+								}
+							]
+						}
+					},
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [
+						{
+							"expires": "Invalid Date"
+						}
+					],
+					"responseTime": null,
+					"body": "{\n    \"productId\": \"12345\",\n    \"reviews\": [\n        {\n            \"reviewId\": \"r1\",\n            \"userId\": \"u100\",\n            \"rating\": 5,\n            \"comment\": \"Excellent quality!\",\n            \"createdAt\": \"2025-05-01T10:20:30Z\"\n        },\n        {\n            \"reviewId\": \"r2\",\n            \"userId\": \"u101\",\n            \"rating\": 4,\n            \"comment\": \"Very good, but packaging could improve.\",\n            \"createdAt\": \"2025-05-03T14:45:10Z\"\n        }\n    ]\n}"
+				}
+			]
+		},
+		{
+			"name": "Add Product Review",
+			"id": "18066133-9da7d45e-0639-4e67-b60a-85108ff9f87d",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userId\": \"123\",\n    \"rating\": 4,\n    \"comment\": \"Great product!\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/products/:productId/reviews",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"products",
+						":productId",
+						"reviews"
+					],
+					"variable": [
+						{
+							"key": "productId",
+							"value": "123"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"id": "18066133-6d7405da-54b9-4465-be3a-a4f0898d1bd0",
+					"name": "Add Product Review",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userId\": \"123\",\n    \"rating\": 4,\n    \"comment\": \"Great product!\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/products/:productId/reviews",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"products",
+								":productId",
+								"reviews"
+							],
+							"variable": [
+								{
+									"key": "productId",
+									"value": "123"
+								}
+							]
+						}
+					},
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [
+						{
+							"expires": "Invalid Date"
+						}
+					],
+					"responseTime": null,
+					"body": "{\n    \"reviewId\": \"r3\",\n    \"productId\": \"12345\",\n    \"userId\": \"u102\",\n    \"rating\": 4,\n    \"comment\": \"Good value for money.\",\n    \"createdAt\": \"2025-05-09T11:00:00Z\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Update Product Review",
+			"id": "18066133-bd7bc235-1b8e-4033-9da3-04b5da7139b1",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"rating\": 5,\n    \"comment\": \"Updated review comment.\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/products/:productId/reviews/:reviewId",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"products",
+						":productId",
+						"reviews",
+						":reviewId"
+					],
+					"variable": [
+						{
+							"key": "productId",
+							"value": "123"
+						},
+						{
+							"key": "reviewId",
+							"value": "566"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"id": "18066133-10434df7-1b9f-42ce-9ae7-05e8847f43ca",
+					"name": "Update Product Review",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"rating\": 5,\n    \"comment\": \"Updated review comment.\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/products/:productId/reviews/:reviewId",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"products",
+								":productId",
+								"reviews",
+								":reviewId"
+							],
+							"variable": [
+								{
+									"key": "productId",
+									"value": ""
+								},
+								{
+									"key": "reviewId",
+									"value": ""
+								}
+							]
+						}
+					},
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [
+						{
+							"expires": "Invalid Date"
+						}
+					],
+					"responseTime": null,
+					"body": "{\n    \"reviewId\": \"r3\",\n    \"productId\": \"12345\",\n    \"userId\": \"u102\",\n    \"rating\": 5,\n    \"comment\": \"Actually, it's perfect after using it more.\",\n    \"updatedAt\": \"2025-05-09T12:15:00Z\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Delete Product Review",
+			"id": "18066133-d5cf4ea0-ab65-4dcd-af7a-9c8f11b9f8c6",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/products/:productId/reviews/:reviewId",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"products",
+						":productId",
+						"reviews",
+						":reviewId"
+					],
+					"variable": [
+						{
+							"key": "productId",
+							"value": "133"
+						},
+						{
+							"key": "reviewId",
+							"value": "213"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"id": "18066133-4148a5e4-2d4b-40db-907a-4f2189781778",
+					"name": "Delete Product Review",
+					"originalRequest": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/products/:productId/reviews/:reviewId",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"products",
+								":productId",
+								"reviews",
+								":reviewId"
+							],
+							"variable": [
+								{
+									"key": "productId",
+									"value": ""
+								},
+								{
+									"key": "reviewId",
+									"value": ""
+								}
+							]
+						}
+					},
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [
+						{
+							"expires": "Invalid Date"
+						}
+					],
+					"responseTime": null,
+					"body": "{\n  \"message\": \"Review deleted successfully.\",\n  \"reviewId\": \"r3\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Get Review by ID",
+			"id": "18066133-26bd04dc-4930-47db-9a98-2eee2bfba83a",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/products/:productId/reviews/:reviewId",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"products",
+						":productId",
+						"reviews",
+						":reviewId"
+					],
+					"variable": [
+						{
+							"key": "productId",
+							"value": "24123"
+						},
+						{
+							"key": "reviewId",
+							"value": "112"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"id": "18066133-86010011-2fe8-44bc-9cf3-a9ace75c8382",
+					"name": "Get Review by ID",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/products/:productId/reviews/:reviewId",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"products",
+								":productId",
+								"reviews",
+								":reviewId"
+							],
+							"variable": [
+								{
+									"key": "productId",
+									"value": ""
+								},
+								{
+									"key": "reviewId",
+									"value": ""
+								}
+							]
+						}
+					},
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [
+						{
+							"expires": "Invalid Date"
+						}
+					],
+					"responseTime": null,
+					"body": "{\n  \"reviewId\": \"r1\",\n  \"productId\": \"12345\",\n  \"userId\": \"u100\",\n  \"rating\": 5,\n  \"comment\": \"Excellent quality!\",\n  \"createdAt\": \"2025-05-01T10:20:30Z\"\n}"
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "https://api.example.com"
+		}
+	]
+}
